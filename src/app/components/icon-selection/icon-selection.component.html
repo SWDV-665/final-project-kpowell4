@@ -1,0 +1,17 @@
+<ion-list line="none" class="center-list">
+  <ion-item>
+    <ion-row>
+      <ion-col>
+
+        <div class="circle" *ngFor = "let icon of icons" 
+        [style.background-color]="icon"
+        (click)="selectIcon(icon)"
+        [class.selected]="selectedIcon ===icon">
+        <ion-icon [name]="icon" size="large"></ion-icon>
+
+        </div>
+      </ion-col>
+    </ion-row>
+  </ion-item>
+
+</ion-list>
