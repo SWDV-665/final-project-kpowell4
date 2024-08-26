@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TodoService  {
+  [x: string]: any;
 
 
   constructor(private storage: Storage) {
@@ -25,11 +26,11 @@ export class TodoService  {
 
   getAllTask(){
     let tasks: any=[];
-    var promise = new Promise((_resolve, _reject) => {
-      this.storage.forEach((value,key,_index) => {
+    var promise = new Promise((resolve, reject) => {
+      this.storage.forEach((value,key,index) => {
         tasks.push({'key': key, 'value':value});
-      }).then((_d) => {
-        resolveForwardRef(tasks);
+      }).then((d) => {
+        resolve(tasks);
       });
     });
 
@@ -39,10 +40,11 @@ export class TodoService  {
   getTaskById(key:string){
     let item = this.storage.get(key);
 
-    return item;
+    return this['item'];
   }
 
   async deleteTask(key: string){
+    let item = this.storage.get(key);
     return await this.storage.remove(key)
   }
 

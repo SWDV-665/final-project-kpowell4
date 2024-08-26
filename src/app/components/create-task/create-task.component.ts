@@ -1,21 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
-import { ModalController, ToastController } from '@ionic/angular';
+import { FormGroup,FormControl, FormBuilder } from '@angular/forms';
+import { ModalController, NavParams, ToastController } from '@ionic/angular';
 import { TodoService } from 'src/app/services/todo.service';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @Component({
   selector: 'app-create-task',
   templateUrl: './create-task.component.html',
   styleUrls: ['./create-task.component.scss'],
 })
-export class CreateTaskComponent   {
+export class CreateTaskComponent implements OnInit   {
 
-  priority = ['High', 'Medium', 'Low']
-  currentDate: string = '';
-  selectedColor: string = '';
-  selectedIcon: string = '';
+  priority = ['High','Medium','Low'];
+  currentDate!: string;
+  selectedColor!: string;
+  selectedIcon!: string;
 
   todoForm = new FormGroup({
     Title: new FormControl(''),
@@ -25,28 +23,62 @@ export class CreateTaskComponent   {
     startTime: new FormControl(new Date().toISOString()),
     endTime: new FormControl(new Date().toISOString()),
     Color: new FormControl(''),
-    Icon: new FormControl(''),
+   Icon: new FormControl(''),
+  })
 
 
+   myForm!: FormGroup;
+  constructor(private modalCtrl: ModalController,
+    private toastCtrl : ToastController,
+    private todoService : TodoService,
+    private navParams : NavParams,
+    private formBuilder : FormBuilder
+    ) { }
+
+
+ngOnInit() {
+const formData = this.navParams.get('data');
+
+
+if(formData){
+  this.myForm = this.formBuilder.group({
+    setDate: [new Date(formData.value.setDate).toISOString()],
+    startTime: [new Date(formData.value.startTime).toISOString()],
+    endTime: [new Date(formData.value.endTime).toISOString()],
+    Title: [formData.value.Title],
+    Priority: [formData.value.Priority],
+    Description: [formData.value.Description],
+    Icon: [formData.value.Icon],
+    Color: [formData.value.Color],
+  
   })
   
+}else {
+  this.myForm =  this.formBuilder.group({
+    setDate: [new Date().toISOString()],
+    startTime: [new Date().toISOString()],
+    endTime: [new Date().toISOString()],
+  Title: [''],
+  Priority: [''],
+  Description: [''],
+  Icon: [''],
+  Color:[''],
+  TaskStatus:['']
+  })
+}
 
-  constructor(private modalCtrl: ModalController,
-    private toast: ToastController,
-    private todoService: TodoService  ) { }
-
-
-
+}
   dismissModal(){
     this.modalCtrl.dismiss();
-
+  
   }
+  async presentToast(msg : string){
 
-  async presentToast(msg: string) {
-    const toast = await this.toast.create({
-       message: msg,
+    const toast = await this.toastCtrl.create({
+      message : msg,
       duration: 2000,
-      buttons: [{
+      buttons  : [{
+  
         side: 'end',
         icon: 'checkmark-circle-outline',
         role: 'cancel'
@@ -56,31 +88,46 @@ export class CreateTaskComponent   {
     toast.present();
   }
 
-  onSubmit() {
-    this.currentDate = (new Date()).toISOString();
-    let uid = this.currentDate + this.todoForm.value.Title;
-    this.todoForm.value.Color = this.selectedColor;
-    this.todoForm.value.Icon = this.selectedIcon
+  onSubmit(){
 
-    this.todoService.addTask(uid, this.todoForm.value).then(data =>{
-      console.log(data) 
-      
-      this.presentToast("Task Added Successfully!");
+    const formData = this.navParams.get('data');
 
-      this.modalCtrl.dismiss();
-    })
-
+    if(formData && formData.key) {
+      this.myForm.value.Color = this.selectedColor;
+      this.myForm.value.Icon = this.selectedIcon;
+      this.todoService.addTask(formData.key,this.myForm.value).then(data => {
+        this.presentToast("Task Updated Succesfully!");
+        this.modalCtrl.dismiss();
+      })
+    }else {
+      this.currentDate = (new Date()).toISOString();
+      let uid = this.currentDate + this.myForm.value.Title;
+      this.myForm.value.Color = this.selectedColor;
+      this.myForm.value.Icon = this.selectedIcon;
+      this.todoService.addTask(uid,this.myForm.value).then(data =>{
+       console.log(data)
+     
+       this.presentToast("Task Added Succesfully!");
+     
+       this.modalCtrl.dismiss();
+      })
+    
+    }
    
 
   }
 
-  onColorSelected(color: string) {
-    this.selectedColor = color;
+
+  onColorSelected(color : string){
+   this.selectedColor = color;
 
   }
+  onIconSelected(icon: string) {
 
-  onIconSelected(icon: string){
     this.selectedIcon = icon;
   }
-
 }
+
+
+
+

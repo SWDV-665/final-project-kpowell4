@@ -1,27 +1,78 @@
-#container {
-  text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+ion-content{
+  --background:#f0f0f2;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+ion-datetime.stylebg{
+  --background:#e6e6fa;
+  --border-color:#80080;
+  width:120%;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+ion-card{
+  //opacity:50%;
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
-  color: #8c8c8c;
+  .icon-button {
+    align-self: flex-start;
 
-  margin: 0;
+    ion-icon{
+      margin: 5px;
+    }
+  }
+
+  .detail {
+    flex-grow: 1;
+    margin: 10px;
+  }
+  .detail h2,
+  .detail p {
+    margin: 0;
+  }
+
+  .close-icon {
+    cursor: pointer;
+  }
+
+  .close-icon {
+    width: 40px;
+    height: 40px;
+    background-color: #ccc;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .circle-box{
+    margin: 8px;
+    
+    ion-icon{
+      font-size: 30px;
+
+    }
+  }
+
+  .circle{
+    width: 25px;
+    height: 25px;
+    border-radius:50%;
+
+    border: 2px solid gray;
+  }
+
+  .center-div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
 }
 
-#container a {
-  text-decoration: none;
+
+h2{
+  color:#000;
 }

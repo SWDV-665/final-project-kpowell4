@@ -7,13 +7,12 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class IconSelectionComponent   {
   @Output() iconSelected = new EventEmitter<string>();
-  icons: string [] = [
-    'alarm-outline', 'basketball', 'pizza-outline', 'cart-outline','desktop-outline', 'barbell-outline',
-  ];
+  icons: string[] = ['trash-outline', 'footsteps-outline', 'fast-food-outline','bed-outline']
+  
 
 
 
-  selectedIcon!: string;
+  selectedIcon: string | undefined;
   
   constructor() { }
 
